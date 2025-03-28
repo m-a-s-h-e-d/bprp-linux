@@ -70,6 +70,14 @@ def copy_file_to_destination(file_name, destination_dir):
     print(f'Unhandled exception: {e}')
 
 
+def delete_existing_auth():
+  current_dir = os.path.dirname(os.path.abspath(__file__))
+  auth_path = os.path.join(current_dir, AUTH_FILENAME)
+  if os.path.exists(auth_path):
+    print(f'Deleting old {AUTH_FILENAME} at "{auth_path}"')
+    os.remove(auth_path)
+
+
 def setup_desktop_entry():
   desktop_entry_dir = os.path.join(HOME_DIRECTORY, DESKTOP_ENTRY_DIRECTORY)
   desktop_entry_path = os.path.join(desktop_entry_dir, DESKTOP_ENTRY_FILENAME)
@@ -251,6 +259,7 @@ def main():
     write_auth_file(tokens)
 
   else:
+    delete_existing_auth()
     setup_desktop_entry()
     authenticate()
     check_auth_file()
