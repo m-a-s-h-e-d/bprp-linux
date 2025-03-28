@@ -1,0 +1,7 @@
+# No manual modifications are required
+[Desktop Entry]
+Type=Application
+Name=Hoshi Auth
+Exec=python3 [REPLACE_WITH_SCRIPT_PATH] %u
+MimeType=x-scheme-handler/hoshi;
+Terminal=false
