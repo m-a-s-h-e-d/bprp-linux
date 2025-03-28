@@ -21,7 +21,7 @@ Authenticator and Hex Patcher for [BPRP](https://playbprp.com/)
 # Dependencies
 - Python 3.x
 - Any Web Browser
-- xdg Desktop Entries
+- xdg-utils
 
 # To Do
 - [ ] Add prompt for Win64 file path
