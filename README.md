@@ -10,7 +10,7 @@ Authenticator and Hex Patcher for [BPRP](https://playbprp.com/)
 # Usage
 
 ## BPRP Hex Patcher
-- Run `python bprp-hex-patcher.py "path/to/BLUEPROTOCOL-Win64-Shipping.exe" "path/to/dll/directory"`
+- Run `python bprp-hex-patcher.py "path/to/BLUEPROTOCOL-Win64-Shipping.exe/directory" "path/to/dll/directory"`
 
 ## Hoshi Auth
 - Run `hoshi-auth` executable
