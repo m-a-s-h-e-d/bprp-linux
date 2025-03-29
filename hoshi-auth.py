@@ -13,7 +13,7 @@ from urllib.parse import urlparse, urljoin, urlencode, parse_qs
 HOME_DIRECTORY = os.path.expanduser('~')
 DESKTOP_ENTRY_DIRECTORY = '.local/share/applications/'
 DESKTOP_ENTRY_FILENAME = 'hoshi-auth.desktop'
-PLACEHOLDER = '[REPLACE_WITH_SCRIPT_PATH]'
+PLACEHOLDER = '[REPLACE_WITH_EXEC_COMMAND]'
 VERIFIER_FILENAME = 'verifier.temp'
 AUTH_FILENAME = 'auth.txt'
 
@@ -41,12 +41,21 @@ def print_header():
 
   ██████████████████████████████████████████████████████████████████████████
   '''
+
   print(header)
+
+
+def get_application_dir():
+  if getattr(sys, 'frozen', False):
+    return os.path.dirname(sys.executable)
+  
+  else:
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 def copy_file_to_destination(file_name, destination_dir):
   try:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    current_dir = get_application_dir()
     source_path = os.path.join(current_dir, file_name)
     destination_path = os.path.join(destination_dir, file_name)
 
@@ -56,7 +65,11 @@ def copy_file_to_destination(file_name, destination_dir):
     with open(source_path, 'r') as file:
       file_content = file.read()
 
-    modified_content = file_content.replace(PLACEHOLDER, __file__)
+    if getattr(sys, 'frozen', False):
+      modified_content = file_content.replace(PLACEHOLDER, f'{sys.executable} "%u"')
+    
+    else:
+      modified_content = file_content.replace(PLACEHOLDER, f'python {__file__} %u')
 
     with open(destination_path, 'w') as file:
       file.write(modified_content)
@@ -71,7 +84,7 @@ def copy_file_to_destination(file_name, destination_dir):
 
 
 def delete_existing_auth():
-  current_dir = os.path.dirname(os.path.abspath(__file__))
+  current_dir = get_application_dir()
   auth_path = os.path.join(current_dir, AUTH_FILENAME)
   if os.path.exists(auth_path):
     print(f'Deleting old {AUTH_FILENAME} at "{auth_path}"')
@@ -125,14 +138,14 @@ def open_login(verifier):
 
 
 def cache_verifier(verifier):
-  current_dir = os.path.dirname(os.path.abspath(__file__))
+  current_dir = get_application_dir()
   cache_path = os.path.join(current_dir, VERIFIER_FILENAME)
   
   with open(cache_path, 'w') as file:
     file.write(verifier)
 
 def retrieve_verifier():
-  current_dir = os.path.dirname(os.path.abspath(__file__))
+  current_dir = get_application_dir()
   cache_path = os.path.join(current_dir, VERIFIER_FILENAME)
   
   try:
@@ -211,17 +224,17 @@ def exchange_code(code, verifier):
 
 def write_auth_file(tokens):
   if tokens is None:
-    input('Failed to exchange authentication code for token. Please try again.')
-    exit()
+    input('No tokens provided. Please reauthenticate.')
+    sys.exit(1)
     
-  current_dir = os.path.dirname(os.path.abspath(__file__))
+  current_dir = get_application_dir()
   access_token = tokens.get('access_token')
   refresh_token = tokens.get('refresh_token')
   auth_path = os.path.join(current_dir, AUTH_FILENAME)
 
   if access_token is None:
     input('Failed to exchange authentication code for token. Please try again.')
-    exit()
+    sys.exit(1)
 
   try:
     with open(auth_path, 'w') as file:
@@ -234,11 +247,11 @@ def write_auth_file(tokens):
   
   except Exception as e:
     input(f'Failed to write token to {AUTH_FILENAME}. Please try again.')
-    exit()
+    sys.exit(1)
 
 
 def check_auth_file():
-  current_dir = os.path.dirname(os.path.abspath(__file__))
+  current_dir = get_application_dir()
   auth_path = os.path.join(current_dir, AUTH_FILENAME)
 
   if os.path.exists(auth_path):
@@ -254,7 +267,6 @@ def main():
     params = parse_uri(sys.argv[1])
     code = params.get('code', [None])[0]
     verifier = retrieve_verifier()
-
     tokens = exchange_code(code, verifier)
     write_auth_file(tokens)
 

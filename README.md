@@ -1,8 +1,11 @@
 # BPRP 4 Linux
 Authenticator and Hex Patcher for [BPRP](https://playbprp.com/)
 
-# Installation
+# Installation & Build
 - Clone the repository
+- Run `pip install pyinstaller`
+- Build with `pyinstaller hoshi-auth.py --onefile && pyinstaller hoshi-auth.py --onefile`
+- Ensure that the built executables have execute permissions `ls -l` and `chmod +x {FILE}`
 
 # Usage
 
@@ -10,7 +13,7 @@ Authenticator and Hex Patcher for [BPRP](https://playbprp.com/)
 - Run `python bprp-hex-patcher.py "path/to/BLUEPROTOCOL-Win64-Shipping.exe" "path/to/dll/directory"`
 
 ## Hoshi Auth
-- Run `python hoshi-auth.py` or `./hoshi-auth.sh`
+- Run `hoshi-auth` executable
 - Authenticate on the login page
 - Open with `xdg-open` when prompted by browser
   - This will run the script in the background again with the redirect uri as an argument
