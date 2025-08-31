@@ -253,11 +253,14 @@ def write_auth_file(tokens):
 def check_auth_file():
   current_dir = get_application_dir()
   auth_path = os.path.join(current_dir, AUTH_FILENAME)
+  path_exists = os.path.exists(auth_path)
 
-  if os.path.exists(auth_path):
+  if path_exists:
     input('[SUCCESS] Created auth.txt successfully. Press Enter to close terminal.')
   else:
     input('[FAIL] Failed to create auth.txt, please try again.')
+  
+  return path_exists
 
 
 def main():

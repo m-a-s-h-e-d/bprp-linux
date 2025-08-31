@@ -28,7 +28,6 @@ Authenticator and Hex Patcher for [BPRP](https://playbprp.com/)
 
 # To Do
 - [ ] Add prompt for Win64 file path
-- [ ] Add argument for command to launch game upon authentication
 
 # Bugs & Issues
 Create a GitHub issue along with steps to recreate the problem
